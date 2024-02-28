@@ -1,0 +1,175 @@
+Ver 0.1
+
+  Computation Mode:
+  
+    New Functions:
+    
+      Implemented browsing folder function to select output folder.
+      Implemented binary switches for control certain variables.
+      Implemented numerical input boxes for name of the output file, running time, pH and rp_um values.
+      Implemented a confirmation window so user can double check values above.
+      A popup window will be displayed when the computation starts and finishes.
+    
+  Plot Mode:
+    
+    New Functions:
+    
+      Implemented browsing folder function to select input folder.
+      Implemented list box that displays all available input files.
+      Implemented numerical input boxes for specie selection, contourf level range and value enlargement for contourf plotting.
+      Implemented contourf plotting using matploblib.pyplot.
+    
+Ver 0.2
+
+  Computation Mode:
+  
+    Modifications:
+      
+      Added value check for running time, pH and rp_um input boxes. Now they will only accept numerical values.
+    
+  Plot Mode:
+  
+    New Functions:
+    
+      Implemented numerical input boxes for specie selection, height selection and value enlargement for line plotting.
+      Implemented line plotting using matplotlib.pyplot.
+      
+    Modifications:
+      
+      Added value check for specie selection, height selection, contourf level range and value enlargement. Now they will only accept positive numerical values.
+      
+Ver 0.3
+
+  Computation Mode:
+  
+    New Functions:
+      
+      Implemented initial value configuration window with value check.
+      
+  Plot Mode:
+  
+    Modification:
+    
+      Specie selection is changed from numerical input box to drop-down list
+      
+Ver 0.4
+
+  Computation Mode:
+  
+    New Functions:
+      
+      Implemented CSV and Text file conversion from netCDF file.
+      
+  Conversion Mode:
+  
+    New Functions:
+    
+      Implemented browsing folder function to select input and output folders.
+      Implemented list box that displays all available input files.
+      Implemented checkboxes for selecting formats to be converted to.
+      Implemented CSV and Text file conversion from netCDF file.
+      
+Ver 0.5
+
+  Plot Mode:
+  
+    New Functions:
+    
+      Implemented plotting using CSV or Text files.
+      
+Ver 0.6
+
+  Computation Mode:
+  
+    Modifications:
+    
+      Replaced popup windows that display when the computation starts and finishes with a new window contains a progression bar that tracks the computation progress.
+      
+  Plot Mode:
+  
+    Modifications:
+    
+      Replaced the input box used for entering height when plotting line plot with a slider bar.
+      
+Ver 0.7
+
+  Computation Mode:
+  
+    New Functions:
+    
+      Implemented date and location configuration window with value check.
+      
+    Modifications:
+    
+      Added value check for both initial value and date and location configuration windows. Now the program won't start unless both configurations are confirmed.
+      Replaced input box used for entering running time with a slider bar.
+      
+  Plot Mode:
+  
+    Modifications:
+    
+      Input boxes for both contourf level range and value enlargement are dropped. Now the program will automatically calculate contourf level range using the maximum and minimal value of the input file.
+      
+Ver 0.8
+
+  Conversion Mode:
+  
+    New Functions:
+    
+      Implemented Kh conversion.
+      Implemented a progression bar that tracks the conversion progress.
+      
+  Plot Mode:
+  
+    New Functions:
+      
+      Implemented Kh plotting.
+      Implemented smoothness setting for contourf plot.
+      
+    Modifications:
+    
+      In the title of a line plot, replaced height level with height value.
+      
+Ver 0.9
+
+  Computation Mode:
+    
+    Modifications:
+      
+      When encountering a Rosenbrock Error, program now will throw an error message, instead of executing an automatically exit.
+      
+Ver 1.0
+
+  General:
+  
+    Modifications:
+    
+      Program name and abberivation are changed
+      UI is changed
+      
+Ver 1.1
+
+  Computation Mode:
+  
+    Modifications:
+    
+      Since content in the input_diurnalVariations file are the same every 24 rows, the content are reduced to only 24 rows.
+      Assignments for input_diurnalVariations in Main.py are changed accordingly.
+      Input method for running time is changed from slider to input box. Now it supports any running time that is longer than 1 day.
+      
+Ver 1.2
+
+  Computation Mode:
+  
+    Modifications:
+    
+      Initial value now won't be reset once the user re-open the configuration window. User's changes to initial values will be maintained.
+      
+Ver 1.3
+
+  Computation Mode:
+  
+    Modifications:
+    
+      Initial value configuration is integrated into the main window.
+      Initial value configuration now allows users to choose which unit they want to use. Available options are normal (ppv), parts per million (ppmv), parts per billion (ppbv), parts per trillion (pptv), and parts per quadrillion (ppqv).
