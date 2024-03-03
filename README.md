@@ -27,9 +27,10 @@ Once all packages are installed, download all code and run GUI.py
 
 Thanks to the contributors, all of them are from Penn State University
     
-    Jose D. Fuentes (jul15@psu.edu)
-    Abu Asaduzzaman (aua1309@psu.edu)
+    Tianjie Chen (tvc5586@psu.edu)
     Adrien Chen (apc6225@psu.edu)
+    Abu Asaduzzaman (aua1309@psu.edu)
+    Jose D. Fuentes (jul15@psu.edu)
 
 ### 5. License
 
