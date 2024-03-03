@@ -35,3 +35,7 @@ Thanks to the contributors, all of them are from Penn State University
 ### 5. License
 
 MIT
+
+### 6. Citation
+
+Toyota, K., Dastoor, A. P., & Ryzhkov, A. (2014). Air45snowpack exchange of bromine, ozone and mercury in the springtime Arctic simulated by the 1-D model PHANTAS 45 Part 2: Mercury and its speciation. Atmospheric Chemistry and Physics, 14(8), 4135454167. https://doi.org/10.5194/acp-14-4135-2014
