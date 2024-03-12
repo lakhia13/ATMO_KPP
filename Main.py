@@ -282,3 +282,26 @@ class Computation():
       
     ncfile.close()
     
+if __name__ == "__main__":
+#                               directory path,   output file name,   box model, altitude, vmix, decomp, gas,  het,  aq,   temp, dis_het, dis_aq, lwc,   Running_days, pH,  rp_um
+  for i in (Computation.compute(os.getcwd(),      "Test Output",      "Off",     "On",     "On", "On",   "On", "On", "On", "On", "Off",   "Off",  "Off", 1,            4.0, 0.2, 
+#                   init_values: "O1D", "O3P", "OH", "HO2", "CO",     "O3",    "H2O2", "NO",    "NO2", 
+                                [0,     0,     0,    0,     160.0e-9, 34.0e-9, 2e-9,   0.02e-9, 0.05e-9,
+#                                "NO3", "HNO3", "HNO4", "N2O5", "HONO", "CH4",  "CH3O2", "CH3OOH", "C2H6", 
+                                 0,     0,      0,      0,      0,      1.9e-6, 0,       0,        0,
+#                                "C2H5O2", "C2H5OOH", "C3H8", "nC3H7O2", "iC3H7O2", "nC3H7OH", "iC3H7OH", "nButane", "iButane", 
+                                 0,        0,         0,      0,         0,         0,         0,         0,         0,
+#                                "sC4H9O2", "nC4H9O2", "tC4H9O2", "iC4H9O2", "sC4H9OH", "nC4H9OH", "tC4H9OH", "iC4H9OH", "sC4H9OOH", 
+                                 0,         0,         0,         0,         0,         0,         0,         0,         0,
+#                                "nC4H9OOH", "HCHO", "CH3CHO", "MEK", "Acetone", "Propanal", "Butanal", "iButanal", "CH3CO3", 
+                                 0,          0.3e-9, 0,        0,     0,         0,          0,         0,          0,
+#                                "PAN", "Cl", "Cl2",  "ClO", "OClO", "HOCl", "HCl", "ClNO2", "ClNO3", 
+                                 0,     0,    10e-12, 0,     0,      0,      0,     0,       1e-20,
+#                                "Br", "Br2",  "BrO", "HOBr", "HBr", "BrCl", "BrONO", "BrNO2", "BrNO3", 
+                                 0,    20e-12, 0,     0,      0,     0,      0,       0,       1e-20,
+#                                "H2O", "Clm_p", "Brm_p", "O3_p", "HOCl_p", "Cl2_p", "HOBr_p", "Br2_p", "BrCl_p"
+                                 0,     1,       1e-20,   0,      0,        0,       0,        0,       0],
+#                     DL_values: year,  month, day,  latitude, longitutde, STD longitude
+                                ['2012', '03',  '24', 72.,      156.,       156.])):
+                                     
+    _ = i
