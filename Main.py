@@ -301,7 +301,7 @@ if __name__ == "__main__":
                                  0,    20e-12, 0,     0,      0,     0,      0,       0,       1e-20,
 #                                "H2O", "Clm_p", "Brm_p", "O3_p", "HOCl_p", "Cl2_p", "HOBr_p", "Br2_p", "BrCl_p"
                                  0,     1,       1e-20,   0,      0,        0,       0,        0,       0],
-#                     DL_values: year,  month, day,  latitude, longitutde, STD longitude
+#                     DL_values: year,   month, day,  latitude, longitutde, STD longitude
                                 ['2012', '03',  '24', 72.,      156.,       156.])):
                                      
     _ = i
