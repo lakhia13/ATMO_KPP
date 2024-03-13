@@ -21,7 +21,9 @@ ATMO\_KPP requires the following packages
     xarray
     matplotlib
 
-Once all packages are installed, download all code and run GUI.py
+Once all packages are installed, download all code and run GUI.py for GUI version, or run Main.py for CLI version.
+
+All parameters required for executing the program can be configured using the GUI. For changing parameters when running in CLI, parameters can be found in Main.py.
 
 ### 4. Contributors
 
