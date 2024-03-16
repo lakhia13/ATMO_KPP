@@ -11,7 +11,7 @@ This model is translated from a Fortran one-dimensional model designed by Toyota
 In addition to all original features, this Python conversion adds a GUI with built-in format conversion and 
 plotting functions.
 
-## 3. Installation & Usage
+## 3. Required Libraries
 
 ATMO\_KPP requires the following packages
 
