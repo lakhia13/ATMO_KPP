@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+
+{% block title %}Conversion Mode{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Conversion Mode</h1>
+
+<div class="row">
+    <!-- NetCDF File Selection -->
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">NetCDF File Selection</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="netcdf-file-list">Available NetCDF Files</label>
+                    <select class="form-control" id="netcdf-file-list" size="10">
+                        <!-- Files will be populated via JavaScript -->
+                    </select>
+                    <small class="form-text text-muted">Select a NetCDF file to convert</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upload New File -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Upload New NetCDF File</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="file-upload" name="file" accept=".nc">
+                            <label class="custom-file-label" for="file-upload">Choose NetCDF file</label>
+                        </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-success" type="submit">Upload</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Conversion Options -->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Conversion Options</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Select Output Formats</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="convert-csv" checked>
+                        <label class="form-check-label" for="convert-csv">CSV Format (.csv)</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="convert-txt" checked>
+                        <label class="form-check-label" for="convert-txt">Text Format (.txt)</label>
+                    </div>
+                </div>
+                
+                <button id="convert-btn" class="btn btn-primary btn-block" disabled>
+                    <i class="fas fa-exchange-alt"></i> Convert
+                </button>
+            </div>
+        </div>
+        
+        <!-- Conversion Progress -->
+        <div class="card" id="conversion-progress" style="display: none;">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Conversion Progress</h5>
+            </div>
+            <div class="card-body">
+                <div id="conversion-message" class="mb-2">Initializing conversion...</div>
+                
+                <!-- CSV Progress -->
+                <div id="csv-progress-container" style="display: none;">
+                    <div class="mb-1">CSV Conversion:</div>
+                    <div class="progress mb-3" style="height: 20px;">
+                        <div id="csv-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%">0%</div>
+                    </div>
+                </div>
+                
+                <!-- TXT Progress -->
+                <div id="txt-progress-container" style="display: none;">
+                    <div class="mb-1">TXT Conversion:</div>
+                    <div class="progress mb-3" style="height: 20px;">
+                        <div id="txt-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 0%">0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File Downloads Section -->
+<div class="card mt-4" id="download-section" style="display: none;">
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Converted Files</h5>
+    </div>
+    <div class="card-body">
+        <div id="download-message">Conversion completed. The following files are available for download:</div>
+        
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div id="csv-downloads" class="list-group">
+                    <!-- CSV download links will be added here -->
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="txt-downloads" class="list-group">
+                    <!-- TXT download links will be added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Load available NetCDF files when page loads
+    $(document).ready(function() {
+        loadNetCDFFiles();
+        
+        // Update the file input label with selected file name
+        $('.custom-file-input').on('change', function() {
+            const fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').html(fileName);
+        });
+    });
+    
+    // Function to load available NetCDF files
+    function loadNetCDFFiles() {
+        $.ajax({
+            url: '/api/netcdf_files',
+            method: 'GET',
+            success: function(response) {
+                const fileSelect = $('#netcdf-file-list');
+                fileSelect.empty();
+                
+                if (response.files.length > 0) {
+                    response.files.forEach(function(file) {
+                        fileSelect.append($('<option></option>').val(file).text(file));
+                    });
+                    $('#convert-btn').prop('disabled', false);
+                } else {
+                    fileSelect.append($('<option></option>').text('No NetCDF files available'));
+                    $('#convert-btn').prop('disabled', true);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading NetCDF files:', error);
+                $('#netcdf-file-list').html('<option>Error loading files</option>');
+                $('#convert-btn').prop('disabled', true);
+            }
+        });
+    }
+    
+    // Convert button click handler
+    $('#convert-btn').click(function() {
+        const selectedFile = $('#netcdf-file-list').val();
+        const convertCSV = $('#convert-csv').prop('checked');
+        const convertTXT = $('#convert-txt').prop('checked');
+        
+        if (!selectedFile) {
+            alert('Please select a NetCDF file to convert.');
+            return;
+        }
+        
+        if (!convertCSV && !convertTXT) {
+            alert('Please select at least one output format.');
+            return;
+        }
+        
+        // Show progress containers
+        $('#conversion-progress').show();
+        $('#conversion-message').text('Starting conversion...');
+        
+        if (convertCSV) {
+            $('#csv-progress-container').show();
+        }
+        
+        if (convertTXT) {
+            $('#txt-progress-container').show();
+        }
+        
+        // Disable convert button during conversion
+        $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Converting...');
+        
+        // Start the conversion
+        $.ajax({
+            url: '/api/convert_file',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                input_file: selectedFile,
+                to_csv: convertCSV,
+                to_txt: convertTXT
+            }),
+            success: function(response) {
+                if (response.success) {
+                    // Start polling for progress updates
+                    pollConversionProgress();
+                } else {
+                    $('#conversion-message').text('Error: ' + response.message);
+                    $('#convert-btn').prop('disabled', false).html('<i class="fas fa-exchange-alt"></i> Convert');
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#conversion-message').text('Error: ' + error);
+                $('#convert-btn').prop('disabled', false).html('<i class="fas fa-exchange-alt"></i> Convert');
+            }
+        });
+    });
+    
+    // Poll for conversion progress
+    function pollConversionProgress() {
+        $.ajax({
+            url: '/api/conversion_status',
+            method: 'GET',
+            success: function(status) {
+                $('#conversion-message').text(status.message);
+                
+                if ($('#convert-csv').prop('checked') && status.csv_total > 0) {
+                    const percent = Math.round((status.csv_progress / status.csv_total) * 100);
+                    $('#csv-progress-bar').css('width', percent + '%').text(percent + '%');
+                }
+                
+                if ($('#convert-txt').prop('checked') && status.txt_total > 0) {
+                    const percent = Math.round((status.txt_progress / status.txt_total) * 100);
+                    $('#txt-progress-bar').css('width', percent + '%').text(percent + '%');
+                }
+                
+                if (status.running) {
+                    // Continue polling while conversion is running
+                    setTimeout(pollConversionProgress, 1000);
+                } else {
+                    // Conversion finished
+                    $('#csv-progress-bar, #txt-progress-bar').removeClass('progress-bar-animated');
+                    $('#convert-btn').prop('disabled', false).html('<i class="fas fa-exchange-alt"></i> Convert');
+                    
+                    // Generate download links for converted files
+                    if (status.message.includes('completed')) {
+                        generateDownloadLinks();
+                    }
+                }
+            },
+            error: function() {
+                // Retry on error
+                setTimeout(pollConversionProgress, 2000);
+            }
+        });
+    }
+    
+    // Generate download links for converted files
+    function generateDownloadLinks() {
+        // Get selected filename and species list
+        const selectedFile = $('#netcdf-file-list').val();
+        const baseName = selectedFile.replace('.nc', '');
+        
+        // Display download section
+        $('#download-section').show();
+        
+        // Fetch species list
+        $.ajax({
+            url: '/api/get_specie_list',
+            method: 'GET',
+            success: function(response) {
+                const specieList = response.specie_list;
+                const csvContainer = $('#csv-downloads');
+                const txtContainer = $('#txt-downloads');
+                
+                // Clear previous links
+                csvContainer.empty();
+                txtContainer.empty();
+                
+                // Add CSV download links if CSV conversion was selected
+                if ($('#convert-csv').prop('checked')) {
+                    csvContainer.append('<h5 class="mb-2">CSV Files:</h5>');
+                    
+                    specieList.forEach(function(specie) {
+                        const filePath = `/uploads/CSV Files/${specie}.csv`;
+                        csvContainer.append(
+                            `<a href="${filePath}" class="list-group-item list-group-item-action" download>
+                                <i class="fas fa-file-csv"></i> ${specie}.csv
+                            </a>`
+                        );
+                    });
+                }
+                
+                // Add TXT download links if TXT conversion was selected
+                if ($('#convert-txt').prop('checked')) {
+                    txtContainer.append('<h5 class="mb-2">Text Files:</h5>');
+                    
+                    specieList.forEach(function(specie) {
+                        const filePath = `/uploads/Text Files/${specie}.txt`;
+                        txtContainer.append(
+                            `<a href="${filePath}" class="list-group-item list-group-item-action" download>
+                                <i class="fas fa-file-alt"></i> ${specie}.txt
+                            </a>`
+                        );
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching species list:', error);
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,6 @@
+numpy
+netcdf4
+pandas
+xarray
+matplotlib
+PySimpleGUI

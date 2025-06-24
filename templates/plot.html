@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Plot Mode{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Plot Mode</h1>
+
+<div class="row">
+    <!-- Left Column: Controls -->
+    <div class="col-md-4">
+        <!-- File Selection -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">File Selection</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="netcdf-file-list">Available NetCDF Files</label>
+                    <select class="form-control" id="netcdf-file-list" size="10">
+                        <!-- Files will be populated via JavaScript -->
+                    </select>
+                    <small class="form-text text-muted">Select a NetCDF file for plotting</small>
+                </div>
+                <button id="select-file-btn" class="btn btn-primary btn-block">
+                    <i class="fas fa-file-import"></i> Select File
+                </button>
+            </div>
+        </div>
+        
+        <!-- Upload New File -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Upload New NetCDF File</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="file-upload" name="file" accept=".nc">
+                            <label class="custom-file-label" for="file-upload">Choose NetCDF file</label>
+                        </div>
+                        <div class="input-group-append">
+                            <button class="btn btn-success" type="submit">Upload</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Plot Controls -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Plot Controls</h5>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label>Plot Type</label>
+                    <div class="btn-group btn-group-toggle w-100" data-toggle="buttons">
+                        <label class="btn btn-outline-primary active" id="line-plot-btn">
+                            <input type="radio" name="plot-type" value="line" checked> Line Plot
+                        </label>
+                        <label class="btn btn-outline-primary" id="contourf-plot-btn">
+                            <input type="radio" name="plot-type" value="contourf"> Contourf Plot
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="line-plot-controls">
+                    <div class="form-group">
+                        <label for="line-specie">Species</label>
+                        <select class="form-control" id="line-specie">
+                            {% for specie in specie_list %}
+                                <option value="{{ specie }}">{{ specie }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="line-height">Height: <span id="height-value">0.1m</span></label>
+                        <input type="range" class="custom-range" id="line-height" min="0" max="247" value="0">
+                    </div>
+                </div>
+                
+                <div id="contourf-plot-controls" style="display: none;">
+                    <div class="form-group">
+                        <label for="contourf-specie">Species</label>
+                        <select class="form-control" id="contourf-specie">
+                            {% for specie in specie_list %}
+                                <option value="{{ specie }}">{{ specie }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contourf-smooth">Smoothness: <span id="smooth-value">5</span></label>
+                        <input type="range" class="custom-range" id="contourf-smooth" min="5" max="100" step="5" value="5">
+                    </div>
+                </div>
+                
+                <button id="generate-plot-btn" class="btn btn-info btn-block" disabled>
+                    <i class="fas fa-chart-line"></i> Generate Plot
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Column: Plot Display -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0" id="plot-title">Plot Preview</h5>
+            </div>
+            <div class="card-body text-center" id="plot-container">
+                <div class="py-5" id="no-plot-message">
+                    <i class="fas fa-chart-line fa-4x mb-3 text-muted"></i>
+                    <p class="lead">Select a file and generate a plot to see the visualization here</p>
+                </div>
+                <img id="plot-image" style="display: none; max-width: 100%;">
+                
+                <!-- Loading spinner -->
+                <div id="plot-loading" style="display: none;">
+                    <div class="d-flex justify-content-center align-items-center" style="height: 400px;">
+                        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Load available NetCDF files when page loads
+    $(document).ready(function() {
+        loadNetCDFFiles();
+        
+        // Update the file input label with selected file name
+        $('.custom-file-input').on('change', function() {
+            const fileName = $(this).val().split('\\').pop();
+            $(this).next('.custom-file-label').html(fileName);
+        });
+        
+        // Initialize height values
+        const heights = {{ z|tojson }};
+        
+        // Update height display when slider changes
+        $('#line-height').on('input', function() {
+            const heightIndex = parseInt($(this).val());
+            $('#height-value').text(heights[heightIndex] + 'm');
+        });
+        
+        // Update smoothness display when slider changes
+        $('#contourf-smooth').on('input', function() {
+            $('#smooth-value').text($(this).val());
+        });
+        
+        // Switch between plot type controls
+        $('#line-plot-btn').click(function() {
+            $('#line-plot-controls').show();
+            $('#contourf-plot-controls').hide();
+        });
+        
+        $('#contourf-plot-btn').click(function() {
+            $('#line-plot-controls').hide();
+            $('#contourf-plot-controls').show();
+        });
+    });
+    
+    // Function to load available NetCDF files
+    function loadNetCDFFiles() {
+        $.ajax({
+            url: '/api/netcdf_files',
+            method: 'GET',
+            success: function(response) {
+                const fileSelect = $('#netcdf-file-list');
+                fileSelect.empty();
+                
+                if (response.files.length > 0) {
+                    response.files.forEach(function(file) {
+                        fileSelect.append($('<option></option>').val(file).text(file));
+                    });
+                } else {
+                    fileSelect.append($('<option></option>').text('No NetCDF files available'));
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading NetCDF files:', error);
+                $('#netcdf-file-list').html('<option>Error loading files</option>');
+            }
+        });
+    }
+    
+    // Select file button click handler
+    $('#select-file-btn').click(function() {
+        const selectedFile = $('#netcdf-file-list').val();
+        
+        if (!selectedFile || selectedFile === 'No NetCDF files available' || selectedFile === 'Error loading files') {
+            alert('Please select a valid NetCDF file.');
+            return;
+        }
+        
+        $.ajax({
+            url: '/api/select_file',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ file: selectedFile }),
+            success: function(response) {
+                if (response.success) {
+                    $('#generate-plot-btn').prop('disabled', false);
+                    $('#plot-title').text('Plot Preview - ' + selectedFile);
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + error);
+            }
+        });
+    });
+    
+    // Generate plot button click handler
+    $('#generate-plot-btn').click(function() {
+        const plotType = $('input[name="plot-type"]:checked').val();
+        
+        // Show loading spinner
+        $('#no-plot-message').hide();
+        $('#plot-image').hide();
+        $('#plot-loading').show();
+        
+        if (plotType === 'line') {
+            const specie = $('#line-specie').val();
+            const height = $('#line-height').val();
+            
+            $.ajax({
+                url: '/api/line_plot',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ specie: specie, height: height }),
+                success: function(response) {
+                    $('#plot-loading').hide();
+                    
+                    if (response.success) {
+                        $('#plot-image').attr('src', response.plot_url).show();
+                    } else {
+                        $('#no-plot-message').show();
+                        alert('Error generating plot: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#plot-loading').hide();
+                    $('#no-plot-message').show();
+                    alert('Error: ' + error);
+                }
+            });
+            
+        } else if (plotType === 'contourf') {
+            const specie = $('#contourf-specie').val();
+            const smoothness = $('#contourf-smooth').val();
+            
+            $.ajax({
+                url: '/api/contourf_plot',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ specie: specie, smoothness: smoothness }),
+                success: function(response) {
+                    $('#plot-loading').hide();
+                    
+                    if (response.success) {
+                        $('#plot-image').attr('src', response.plot_url).show();
+                    } else {
+                        $('#no-plot-message').show();
+                        alert('Error generating plot: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#plot-loading').hide();
+                    $('#no-plot-message').show();
+                    alert('Error: ' + error);
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,756 @@
+{% extends "base.html" %}
+
+{% block title %}Computation Mode{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Computation Mode</h1>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs" id="computeTabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="binary-tab" data-toggle="tab" href="#binary" role="tab">Binary Switches</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="numerical-tab" data-toggle="tab" href="#numerical" role="tab">Numerical Input</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="initial-tab" data-toggle="tab" href="#initial" role="tab">Initial Values</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="date-tab" data-toggle="tab" href="#date" role="tab">Date & Location</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="execution-tab" data-toggle="tab" href="#execution" role="tab">Execution</a>
+    </li>
+</ul>
+
+<!-- Tabs Content -->
+<div class="tab-content" id="computeTabsContent">
+    <!-- Binary Switches Tab -->
+    <div class="tab-pane fade show active" id="binary" role="tabpanel">
+        <h3 class="mb-3">Binary Switches</h3>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Box Model Mode</label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger active">
+                                <input type="radio" name="box_model" value="Off" checked> Off
+                            </label>
+                            <label class="btn btn-outline-success">
+                                <input type="radio" name="box_model" value="On"> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Altitude Calculation</label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger">
+                                <input type="radio" name="altitude" value="Off"> Off
+                            </label>
+                            <label class="btn btn-outline-success active">
+                                <input type="radio" name="altitude" value="On" checked> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Vertical Mix</label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger">
+                                <input type="radio" name="vertical_mix" value="Off"> Off
+                            </label>
+                            <label class="btn btn-outline-success active">
+                                <input type="radio" name="vertical_mix" value="On" checked> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Surface Decomposition</label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger">
+                                <input type="radio" name="decomposition" value="Off"> Off
+                            </label>
+                            <label class="btn btn-outline-success active">
+                                <input type="radio" name="decomposition" value="On" checked> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Gas Reactions</label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger">
+                                <input type="radio" name="gas" value="Off"> Off
+                            </label>
+                            <label class="btn btn-outline-success active">
+                                <input type="radio" name="gas" value="On" checked> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Het Reactions</label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger">
+                                <input type="radio" name="het" value="Off"> Off
+                            </label>
+                            <label class="btn btn-outline-success active">
+                                <input type="radio" name="het" value="On" checked> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Aq Reactions</label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger">
+                                <input type="radio" name="aq" value="Off"> Off
+                            </label>
+                            <label class="btn btn-outline-success active">
+                                <input type="radio" name="aq" value="On" checked> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">
+                        Temperature Calculation
+                        <a href="#" data-toggle="tooltip" title="Temperature calculation explanation"><i class="fas fa-question-circle"></i></a>
+                    </label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger active">
+                                <input type="radio" name="temp" value="Off" checked> Off
+                            </label>
+                            <label class="btn btn-outline-success">
+                                <input type="radio" name="temp" value="On"> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">
+                        Mono Dis Het
+                        <a href="#" data-toggle="tooltip" title="Mono Dis Het explanation"><i class="fas fa-question-circle"></i></a>
+                    </label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger active">
+                                <input type="radio" name="dis_het" value="Off" checked> Off
+                            </label>
+                            <label class="btn btn-outline-success">
+                                <input type="radio" name="dis_het" value="On"> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">
+                        Mono Dis Aq
+                        <a href="#" data-toggle="tooltip" title="Mono Dis Aq explanation"><i class="fas fa-question-circle"></i></a>
+                    </label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger active">
+                                <input type="radio" name="dis_aq" value="Off" checked> Off
+                            </label>
+                            <label class="btn btn-outline-success">
+                                <input type="radio" name="dis_aq" value="On"> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">
+                        LWC_v_v
+                        <a href="#" data-toggle="tooltip" title="LWC_v_v explanation"><i class="fas fa-question-circle"></i></a>
+                    </label>
+                    <div class="col-sm-6">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-danger active">
+                                <input type="radio" name="lwc" value="Off" checked> Off
+                            </label>
+                            <label class="btn btn-outline-success">
+                                <input type="radio" name="lwc" value="On"> On
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="btn btn-primary mt-3" onclick="$('#numerical-tab').tab('show')">Next</button>
+    </div>
+    
+    <!-- Numerical Input Tab -->
+    <div class="tab-pane fade" id="numerical" role="tabpanel">
+        <h3 class="mb-3">Numerical Input</h3>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Output Folder</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="output_folder" value="/tmp" readonly>
+                        <small class="form-text text-muted">Output will be saved in the uploads folder</small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Name of NetCDF Output File</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" value="Output">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Generate Other Formats</label>
+                    <div class="col-sm-6">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="CSV" value="true">
+                            <label class="form-check-label" for="CSV">CSV (.csv)</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" id="TXT" value="true">
+                            <label class="form-check-label" for="TXT">Text (.txt)</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Running Time (days)</label>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="running_time" value="1" min="1">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">pH</label>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="pH" value="4" step="0.1" min="0">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">rp_um</label>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="rp_um" value="0.2" step="0.1" min="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button class="btn btn-secondary" onclick="$('#binary-tab').tab('show')">Previous</button>
+            <button class="btn btn-primary" onclick="$('#initial-tab').tab('show')">Next</button>
+        </div>
+    </div>
+    
+    <!-- Initial Values Tab -->
+    <div class="tab-pane fade" id="initial" role="tabpanel">
+        <h3 class="mb-3">Initial Values</h3>
+        <div class="row mb-3">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary" id="prev-page" disabled>&lt;</button>
+                    <button type="button" class="btn btn-outline-secondary" disabled id="page-indicator">Page 1 of 8</button>
+                    <button type="button" class="btn btn-outline-secondary" id="next-page">&gt;</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="initial-values-container">
+            <!-- Initial values will be loaded dynamically -->
+            {% for i in range(1, 9) %}
+            <div id="page-{{ i }}" class="initial-values-page" {% if i > 1 %}style="display: none;"{% endif %}>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th width="30%">Species</th>
+                                    <th width="40%">Value</th>
+                                    <th width="30%">Unit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for j in range(9) %}
+                                {% set idx = (i-1)*9 + j %}
+                                {% if idx < specie_list|length - 1 %}
+                                <tr>
+                                    <td>{{ specie_list[idx] }}</td>
+                                    <td>
+                                        <input type="number" class="form-control" id="E{{ idx+1 }}" value="{{ init_val[idx] }}">
+                                    </td>
+                                    <td>
+                                        <select class="form-control" id="unit_E{{ idx+1 }}">
+                                            {% for unit in unit_list %}
+                                            <option value="{{ unit }}" {% if idx in [4, 5, 6, 7, 8, 37] and unit == 'ppbv' %}selected{% elif idx in [47] and unit == 'pptv' %}selected{% elif idx in [53, 62] and unit == 'ppqv' %}selected{% elif idx == 64 and unit == 'ppv' %}selected{% elif unit == 'ppmv' %}selected{% endif %}>{{ unit }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-3">
+            <button class="btn btn-secondary" onclick="$('#numerical-tab').tab('show')">Previous</button>
+            <button class="btn btn-primary" onclick="$('#date-tab').tab('show')">Next</button>
+        </div>
+    </div>
+    
+    <!-- Date & Location Tab -->
+    <div class="tab-pane fade" id="date" role="tabpanel">
+        <h3 class="mb-3">Date & Location</h3>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Year</label>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="DL1" value="2012" min="1900" max="2100">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Month</label>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="DL2" value="3" min="1" max="12">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Day</label>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="DL3" value="24" min="1" max="31">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Latitude</label>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="DL4" value="71.2906" min="-90" max="90" step="0.0001">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Longitude</label>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="DL5" value="156.7886" min="-180" max="180" step="0.0001">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">
+                        STD Longitude
+                        <a href="#" data-toggle="tooltip" title="Standard longitude for time zone calculations"><i class="fas fa-question-circle"></i></a>
+                    </label>
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="DL6" value="156.7886" min="-180" max="180" step="0.0001">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button class="btn btn-secondary" onclick="$('#initial-tab').tab('show')">Previous</button>
+            <button class="btn btn-primary" onclick="$('#execution-tab').tab('show')">Next</button>
+        </div>
+    </div>
+    
+    <!-- Execution Tab -->
+    <div class="tab-pane fade" id="execution" role="tabpanel">
+        <h3 class="mb-3">Execution</h3>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Computation Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Binary Switch Settings</h6>
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Box Model Mode
+                                        <span class="badge badge-pill badge-danger" id="summary-box-model">Off</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Altitude Calculation
+                                        <span class="badge badge-pill badge-success" id="summary-altitude">On</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Vertical Mix
+                                        <span class="badge badge-pill badge-success" id="summary-vertical-mix">On</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Surface Decomposition
+                                        <span class="badge badge-pill badge-success" id="summary-decomposition">On</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Gas Reactions
+                                        <span class="badge badge-pill badge-success" id="summary-gas">On</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Het Reactions
+                                        <span class="badge badge-pill badge-success" id="summary-het">On</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Aq Reactions
+                                        <span class="badge badge-pill badge-success" id="summary-aq">On</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Temperature Calculation
+                                        <span class="badge badge-pill badge-danger" id="summary-temp">Off</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Mono Dis Het
+                                        <span class="badge badge-pill badge-danger" id="summary-dis-het">Off</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Mono Dis Aq
+                                        <span class="badge badge-pill badge-danger" id="summary-dis-aq">Off</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        LWC_v_v
+                                        <span class="badge badge-pill badge-danger" id="summary-lwc">Off</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Numerical Values</h6>
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Output File
+                                        <span id="summary-name">Output.nc</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Generate CSV
+                                        <span id="summary-csv">No</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Generate TXT
+                                        <span id="summary-txt">No</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Running Time
+                                        <span id="summary-running-time">1 day(s)</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        pH
+                                        <span id="summary-ph">4</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        rp_um
+                                        <span id="summary-rp-um">0.2</span>
+                                    </li>
+                                </ul>
+                                
+                                <h6 class="mt-3">Date & Location</h6>
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Date
+                                        <span id="summary-date">2012-03-24</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Latitude
+                                        <span id="summary-latitude">71.2906</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        Longitude
+                                        <span id="summary-longitude">156.7886</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button id="execute-btn" class="btn btn-success btn-lg">
+                            <i class="fas fa-play"></i> Execute Computation
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Computation Progress -->
+                <div class="card mt-3" id="progress-container" style="display: none;">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Computation Progress</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="progress-message" class="mb-2">Initializing computation...</div>
+                        <div class="progress" style="height: 30px;">
+                            <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
+                        </div>
+                        
+                        <div class="mt-3" id="csv-progress-container" style="display: none;">
+                            <div id="csv-progress-message" class="mb-2">Converting to CSV...</div>
+                            <div class="progress" style="height: 20px;">
+                                <div id="csv-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3" id="txt-progress-container" style="display: none;">
+                            <div id="txt-progress-message" class="mb-2">Converting to TXT...</div>
+                            <div class="progress" style="height: 20px;">
+                                <div id="txt-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button class="btn btn-secondary" onclick="$('#date-tab').tab('show')">Previous</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize tooltips
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    
+    // Initial values pagination
+    let currentPage = 1;
+    const totalPages = 8;
+    
+    // Update page indicator
+    function updatePageIndicator() {
+        $('#page-indicator').text(`Page ${currentPage} of ${totalPages}`);
+        // Enable/disable pagination buttons
+        $('#prev-page').prop('disabled', currentPage === 1);
+        $('#next-page').prop('disabled', currentPage === totalPages);
+    }
+    
+    // Handle page navigation
+    $('#prev-page').click(function() {
+        if (currentPage > 1) {
+            $(`#page-${currentPage}`).hide();
+            currentPage--;
+            $(`#page-${currentPage}`).show();
+            updatePageIndicator();
+        }
+    });
+    
+    $('#next-page').click(function() {
+        if (currentPage < totalPages) {
+            $(`#page-${currentPage}`).hide();
+            currentPage++;
+            $(`#page-${currentPage}`).show();
+            updatePageIndicator();
+        }
+    });
+    
+    // Handle binary switch inputs
+    $('.btn-group-toggle').on('change', 'input[type="radio"]', function() {
+        const name = $(this).attr('name');
+        const value = $(this).val();
+        const badgeId = `#summary-${name.replace('_', '-')}`;
+        
+        if (value === 'On') {
+            $(badgeId).removeClass('badge-danger').addClass('badge-success').text('On');
+            $(this).closest('label').addClass('active').siblings().removeClass('active');
+        } else {
+            $(badgeId).removeClass('badge-success').addClass('badge-danger').text('Off');
+            $(this).closest('label').addClass('active').siblings().removeClass('active');
+        }
+    });
+    
+    // Update summary when numerical inputs change
+    $('#name').on('input', function() {
+        $('#summary-name').text($(this).val() + '.nc');
+    });
+    
+    $('#CSV').on('change', function() {
+        $('#summary-csv').text(this.checked ? 'Yes' : 'No');
+    });
+    
+    $('#TXT').on('change', function() {
+        $('#summary-txt').text(this.checked ? 'Yes' : 'No');
+    });
+    
+    $('#running_time').on('input', function() {
+        $('#summary-running-time').text($(this).val() + ' day(s)');
+    });
+    
+    $('#pH').on('input', function() {
+        $('#summary-ph').text($(this).val());
+    });
+    
+    $('#rp_um').on('input', function() {
+        $('#summary-rp-um').text($(this).val());
+    });
+    
+    // Update date summary
+    function updateDateSummary() {
+        const year = $('#DL1').val();
+        const month = $('#DL2').val().padStart(2, '0');
+        const day = $('#DL3').val().padStart(2, '0');
+        $('#summary-date').text(`${year}-${month}-${day}`);
+        $('#summary-latitude').text($('#DL4').val());
+        $('#summary-longitude').text($('#DL5').val());
+    }
+    
+    $('#DL1, #DL2, #DL3, #DL4, #DL5').on('input', updateDateSummary);
+    
+    // Execute computation
+    $('#execute-btn').click(function() {
+        // Show progress container
+        $('#progress-container').show();
+        $('#execute-btn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
+        
+        // Create object with all computation parameters
+        const params = {
+            // Binary switches
+            box_model: $('input[name="box_model"]:checked').val(),
+            altitude: $('input[name="altitude"]:checked').val(),
+            vertical_mix: $('input[name="vertical_mix"]:checked').val(),
+            decomp: $('input[name="decomposition"]:checked').val(),
+            gas: $('input[name="gas"]:checked').val(),
+            het: $('input[name="het"]:checked').val(),
+            aq: $('input[name="aq"]:checked').val(),
+            temp: $('input[name="temp"]:checked').val(),
+            dis_het: $('input[name="dis_het"]:checked').val(),
+            dis_aq: $('input[name="dis_aq"]:checked').val(),
+            lwc: $('input[name="lwc"]:checked').val(),
+            
+            // Numerical inputs
+            name: $('#name').val(),
+            to_csv: $('#CSV').prop('checked'),
+            to_txt: $('#TXT').prop('checked'),
+            running_time: $('#running_time').val(),
+            pH: $('#pH').val(),
+            rp_um: $('#rp_um').val(),
+            
+            // Date & Location
+            DL1: $('#DL1').val(),
+            DL2: $('#DL2').val(),
+            DL3: $('#DL3').val(),
+            DL4: $('#DL4').val(),
+            DL5: $('#DL5').val(),
+            DL6: $('#DL6').val()
+        };
+        
+        // Add initial values to params
+        for (let i = 1; i <= 72; i++) {
+            const elementId = `E${i}`;
+            const unitId = `unit_E${i}`;
+            
+            if ($(`#${elementId}`).length) {
+                params[elementId] = $(`#${elementId}`).val();
+                params[unitId] = $(`#${unitId}`).val();
+            }
+        }
+        
+        // Start the computation
+        $.ajax({
+            url: '/api/run_computation',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(params),
+            success: function(response) {
+                // Start polling for progress updates
+                if (response.success) {
+                    pollComputeProgress();
+                    
+                    // Show progress containers for conversions if selected
+                    if ($('#CSV').prop('checked')) {
+                        $('#csv-progress-container').show();
+                    }
+                    if ($('#TXT').prop('checked')) {
+                        $('#txt-progress-container').show();
+                    }
+                } else {
+                    alert('Error: ' + response.message);
+                    $('#execute-btn').prop('disabled', false).html('<i class="fas fa-play"></i> Execute Computation');
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Error: ' + error);
+                $('#execute-btn').prop('disabled', false).html('<i class="fas fa-play"></i> Execute Computation');
+            }
+        });
+    });
+    
+    // Poll for computation progress
+    function pollComputeProgress() {
+        $.ajax({
+            url: '/api/compute_status',
+            method: 'GET',
+            success: function(status) {
+                $('#progress-message').text(status.message);
+                
+                if (status.total_steps > 0) {
+                    const percent = Math.round((status.progress / status.total_steps) * 100);
+                    $('#progress-bar').css('width', percent + '%').text(percent + '%');
+                }
+                
+                if (status.running) {
+                    // Continue polling while computation is running
+                    setTimeout(pollComputeProgress, 1000);
+                } else {
+                    // Computation finished
+                    if (status.message.includes('completed')) {
+                        $('#progress-bar').removeClass('progress-bar-animated').addClass('bg-success');
+                    } else {
+                        $('#progress-bar').removeClass('progress-bar-animated').addClass('bg-danger');
+                    }
+                    
+                    // Check for conversions
+                    if ($('#CSV').prop('checked') || $('#TXT').prop('checked')) {
+                        pollConversionProgress();
+                    } else {
+                        $('#execute-btn').prop('disabled', false).html('<i class="fas fa-check"></i> Completed');
+                    }
+                }
+            },
+            error: function() {
+                // Retry on error
+                setTimeout(pollComputeProgress, 2000);
+            }
+        });
+    }
+    
+    // Poll for conversion progress
+    function pollConversionProgress() {
+        $.ajax({
+            url: '/api/conversion_status',
+            method: 'GET',
+            success: function(status) {
+                if ($('#CSV').prop('checked') && status.csv_total > 0) {
+                    const percent = Math.round((status.csv_progress / status.csv_total) * 100);
+                    $('#csv-progress-bar').css('width', percent + '%').text(percent + '%');
+                }
+                
+                if ($('#TXT').prop('checked') && status.txt_total > 0) {
+                    const percent = Math.round((status.txt_progress / status.txt_total) * 100);
+                    $('#txt-progress-bar').css('width', percent + '%').text(percent + '%');
+                }
+                
+                if (status.running) {
+                    // Continue polling while conversion is running
+                    setTimeout(pollConversionProgress, 1000);
+                } else {
+                    // Conversion finished
+                    $('#csv-progress-bar, #txt-progress-bar').removeClass('progress-bar-animated');
+                    $('#execute-btn').prop('disabled', false).html('<i class="fas fa-check"></i> Completed');
+                }
+            },
+            error: function() {
+                // Retry on error
+                setTimeout(pollConversionProgress, 2000);
+            }
+        });
+    }
+    
+    // Initialize summary values
+    updateDateSummary();
+});
+</script>
+{% endblock %}
